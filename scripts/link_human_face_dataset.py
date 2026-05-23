@@ -3,7 +3,6 @@ Roboflow YOLO 데이터셋 → emotion-bot 학습용 data.yaml 연동.
 
 기본 소스:
   C:\\Users\\moonjintae\\datasets\\Human Face dataset
-  (train/images, train/labels, valid/images, valid/labels)
 """
 from __future__ import annotations
 
@@ -19,75 +18,72 @@ if str(ROOT) not in sys.path:
 
 import config  # noqa: E402
 
-DEFAULT_SOURCE = Path(r"C:\Users\moonjintae\datasets\Human Face dataset")
+_SCRIPTS = Path(__file__).resolve().parent
+if str(_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(_SCRIPTS))
+
+from yolo_dataset_utils import count_images, count_labels  # noqa: E402
 
 
-def validate_roboflow_yolo(root: Path) -> None:
-    required = [
-        root / "train" / "images",
-        root / "train" / "labels",
-        root / "valid" / "images",
-        root / "valid" / "labels",
-    ]
-    missing = [p for p in required if not p.is_dir()]
-    if missing:
-        raise FileNotFoundError(
-            "Roboflow YOLO 폴더 구조가 아닙니다. 다음이 필요합니다:\n"
-            "  train/images, train/labels, valid/images, valid/labels\n"
-            f"누락: {missing}"
-        )
-
-
-def write_project_data_yaml(source_root: Path, output_yaml: Path) -> Path:
-    validate_roboflow_yolo(source_root)
-    content = {
+def _yaml_content(source_root: Path) -> dict:
+    return {
         "path": str(source_root.resolve()).replace("\\", "/"),
         "train": "train/images",
         "val": "valid/images",
         "nc": 1,
         "names": {0: config.YOLO_CLASS_NAME},
     }
-    output_yaml.parent.mkdir(parents=True, exist_ok=True)
-    with output_yaml.open("w", encoding="utf-8") as f:
+
+
+def link_dataset(source_root: Path, project_yaml: Path) -> None:
+    source_root = source_root.resolve()
+    train_img = source_root / "train" / "images"
+    train_lbl = source_root / "train" / "labels"
+    val_img = source_root / "valid" / "images"
+    val_lbl = source_root / "valid" / "labels"
+
+    if not train_lbl.is_dir() or not val_lbl.is_dir():
+        raise FileNotFoundError(
+            f"labels 폴더가 없습니다: {source_root}\n"
+            "  필요: train/labels, valid/labels"
+        )
+
+    content = _yaml_content(source_root)
+    project_yaml.parent.mkdir(parents=True, exist_ok=True)
+    with project_yaml.open("w", encoding="utf-8") as f:
         yaml.dump(content, f, default_flow_style=False, allow_unicode=True)
-    return output_yaml
 
+    source_yaml = source_root / "data.yaml"
+    with source_yaml.open("w", encoding="utf-8") as f:
+        yaml.dump(content, f, default_flow_style=False, allow_unicode=True)
 
-def count_images(split_dir: Path) -> int:
-    if not split_dir.is_dir():
-        return 0
-    exts = {".jpg", ".jpeg", ".png", ".bmp", ".webp"}
-    return sum(1 for p in split_dir.iterdir() if p.suffix.lower() in exts)
+    print(f"Dataset root: {source_root}")
+    print(f"Project yaml: {project_yaml}")
+    print(f"Source yaml:  {source_yaml}")
+    print(
+        f"train: {count_images(train_img)} images, {count_labels(train_lbl)} labels"
+    )
+    print(f"val:   {count_images(val_img)} images, {count_labels(val_lbl)} labels")
+
+    if count_images(train_img) == 0:
+        print(
+            "\n⚠ 이 PC에서 train/images 이미지 0개로 보입니다.\n"
+            "  폴더에 파일이 있는데 0이면: python scripts/yolo_dataset_stats.py 로 재확인"
+        )
+    else:
+        print("\nOK — python train/train_yolo_face.py 또는 YOLO 노트북으로 학습")
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Link Human Face YOLO dataset")
-    parser.add_argument(
-        "--source",
-        type=Path,
-        default=DEFAULT_SOURCE,
-        help="Roboflow export root (contains train/, valid/)",
-    )
-    parser.add_argument(
-        "--output-yaml",
-        type=Path,
-        default=config.YOLO_DATA_YAML,
-        help="Project data.yaml to write",
-    )
+    parser.add_argument("--source", type=Path, default=config.HUMAN_FACE_DATASET)
+    parser.add_argument("--output-yaml", type=Path, default=config.YOLO_DATA_YAML)
     args = parser.parse_args()
 
-    source = args.source.resolve()
-    if not source.is_dir():
-        raise FileNotFoundError(source)
+    if not args.source.is_dir():
+        raise FileNotFoundError(args.source)
 
-    out = write_project_data_yaml(source, args.output_yaml.resolve())
-    train_n = count_images(source / "train" / "images")
-    val_n = count_images(source / "valid" / "images")
-
-    print(f"Linked dataset: {source}")
-    print(f"Wrote: {out}")
-    print(f"train images: {train_n}, valid images: {val_n}")
-    print("Next: python train/train_yolo_face.py")
+    link_dataset(args.source, args.output_yaml.resolve())
 
 
 if __name__ == "__main__":

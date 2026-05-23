@@ -69,18 +69,10 @@ jupyter notebook notebooks/yolo/yolo_train_and_tune.ipynb
 
 ## 1. YOLO 얼굴 검출 — 데이터 준비
 
-### Human Face dataset (연동됨)
+### Human Face dataset
 
-로컬 Roboflow 데이터:
-
-`C:\Users\moonjintae\datasets\Human Face dataset`
-
-```powershell
-python scripts/link_human_face_dataset.py
-```
-
-→ `data/face_detect/data.yaml`이 위 경로를 가리킵니다 (이미지 복사 없음).  
-자세히: [data/face_detect/DATASET.md](data/face_detect/DATASET.md)
+`C:\Users\moonjintae\datasets\Human Face dataset` → `python scripts/link_human_face_dataset.py`  
+[DATASET.md](data/face_detect/DATASET.md)
 
 ### 방법 A: CSV (픽셀 bbox)
 

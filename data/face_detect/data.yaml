@@ -1,6 +1,6 @@
+names:
+  0: face
+nc: 1
 path: C:/Users/moonjintae/datasets/Human Face dataset
 train: train/images
 val: valid/images
-nc: 1
-names:
-  0: face
