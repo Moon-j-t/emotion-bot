@@ -1,7 +1,14 @@
-# Face Attribute MTL
+# emotion-bot
+
+GitHub: https://github.com/Moon-j-t/emotion-bot  
+로컬: `C:\Users\moonjintae\projects\emotion bot(cursor ver)`
+
+표정·나이 등 감정 관련 **봇/추론 파이프라인**과, YOLO·CNN(MTL)·SLM 등 **모델 학습(notebook)** 을 **이 저장소 하나**에서 관리합니다.
 
 **직접 학습한 YOLO**로 얼굴을 검출하고, **MobileNetV3 MTL**로 표정·나이를 추정합니다.  
 연속 프레임에서는 Temporal Smoothing으로 예측을 안정화합니다.
+
+> `C:\Users\moonjintae\projects\face_attr_mtl` 은 동일 작업의 복사본일 수 있습니다. Git push는 **이 폴더(emotion-bot)** 기준으로 하세요. 구조 설명: [docs/REPO_LAYOUT.md](docs/REPO_LAYOUT.md)
 
 ## 파이프라인 개요
 
@@ -22,11 +29,43 @@
 ## 설치
 
 ```bash
-cd C:\Users\moonjintae\projects\face_attr_mtl
+cd "C:\Users\moonjintae\projects\emotion bot(cursor ver)"
 python -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements.txt
 ```
+
+### Notebook (YOLO·MTL·SLM 학습·튜닝)
+
+```bash
+pip install -r requirements-notebook.txt
+jupyter notebook notebooks/yolo/yolo_train_and_tune.ipynb
+```
+
+| 역할 | 위치 |
+|------|------|
+| 학습·파라미터 비교 | `notebooks/` |
+| 실험 이력 (Git) | `experiments/*.jsonl` |
+| 채택 설정 요약 | 아래 **실험 결과 요약** |
+
+| Notebook | 경로 |
+|----------|------|
+| YOLO | `notebooks/yolo/yolo_train_and_tune.ipynb` |
+| CNN/MTL | `notebooks/mtl/mtl_train_and_tune.ipynb` |
+| SLM | `notebooks/slm/slm_train_and_tune.ipynb` |
+
+## 실험 결과 요약
+
+<!-- notebooks 마지막 셀 출력을 채택 run 확정 후 여기에 붙여 넣기 -->
+
+| 항목 | 값 |
+|------|-----|
+| run_id | (미정) |
+| epochs | - |
+| batch | - |
+| mAP50 | - |
+
+전체 이력: [experiments/yolo_runs.jsonl](experiments/yolo_runs.jsonl)
 
 ## 1. YOLO 얼굴 검출 — 데이터 준비
 
@@ -61,6 +100,9 @@ python scripts/prepare_yolo_dataset.py --source-yolo path\to\my_dataset --val-ra
 출력: `data/face_detect/` (`images/train`, `labels/train`, `data.yaml`)
 
 ## 2. YOLO 얼굴 검출 — 학습
+
+**Notebook (탐색):** `notebooks/yolo/yolo_train_and_tune.ipynb`  
+**Script (본 학습):**
 
 ```bash
 python train/train_yolo_face.py
@@ -105,21 +147,15 @@ python inference/run_webcam.py --yolo weights\face_yolo.pt --mtl weights\face_mt
 ## 프로젝트 구조
 
 ```
-face_attr_mtl/
-├── config.py
-├── data/face_detect/          # YOLO 학습 데이터
-├── train/
-│   ├── train_yolo_face.py     # YOLO 얼굴 검출 학습
-│   └── train_mtl.py           # MobileNetV3 MTL 학습
-├── scripts/
-│   └── prepare_yolo_dataset.py
-├── models/
-│   ├── detector.py            # 학습된 face_yolo.pt 로드
-│   ├── mtl_model.py
-│   └── pipeline.py
-└── weights/
-    ├── face_yolo.pt           # YOLO 학습 산출물
-    └── face_mtl_mobilenetv3.pt
+emotion-bot/
+├── notebooks/                 # YOLO / MTL(CNN) / SLM 학습 ipynb
+│   └── yolo/
+├── experiments/               # yolo_runs.jsonl 등 (Git)
+├── configs/yolo/
+├── train/                     # 재현용 학습 스크립트
+├── models/ · inference/       # 봇·추론
+├── data/face_detect/
+└── weights/                   # .pt (Git 제외)
 ```
 
 ## 설정 (`config.py`)

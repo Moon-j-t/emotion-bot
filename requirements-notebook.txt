@@ -1,0 +1,6 @@
+-r requirements.txt
+jupyter>=1.0.0
+ipykernel>=6.0.0
+matplotlib>=3.7.0
+pandas>=2.0.0
+PyYAML>=6.0.0

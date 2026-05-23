@@ -4,5 +4,7 @@ __pycache__/
 weights/*.pt
 !weights/.gitkeep
 runs/
+.ipynb_checkpoints/
+experiments/preview/
 data/face_detect/images/
 data/face_detect/labels/

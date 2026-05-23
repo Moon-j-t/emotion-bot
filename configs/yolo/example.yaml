@@ -1,0 +1,8 @@
+# notebooks/yolo/yolo_train_and_tune.ipynb 에서 불러올 설정 예시
+run_name: face_train_nb_001
+base: yolov8n.pt
+epochs: 50
+batch: 16
+imgsz: 640
+patience: 15
+device: null
