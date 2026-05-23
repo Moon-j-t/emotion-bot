@@ -1,0 +1,8 @@
+.venv/
+__pycache__/
+*.pyc
+weights/*.pt
+!weights/.gitkeep
+runs/
+data/face_detect/images/
+data/face_detect/labels/

@@ -1,0 +1,4 @@
+image_path,xmin,ymin,xmax,ymax
+sample_001.jpg,120,80,220,200
+sample_001.jpg,300,90,380,190
+sample_002.jpg,50,60,150,170
