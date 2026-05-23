@@ -1,10 +1,6 @@
-# Ultralytics YOLO 데이터셋 설정 (prepare_yolo_dataset.py가 path를 갱신할 수 있음)
-# 단일 클래스: face (id=0)
-
-path: data/face_detect
-train: images/train
-val: images/val
-
+path: C:/Users/moonjintae/datasets/Human Face dataset
+train: train/images
+val: valid/images
 nc: 1
 names:
   0: face

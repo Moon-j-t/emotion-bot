@@ -5,6 +5,9 @@ PROJECT_ROOT = Path(__file__).resolve().parent
 WEIGHTS_DIR = PROJECT_ROOT / "weights"
 DATA_DIR = PROJECT_ROOT / "data" / "face_detect"
 
+# Roboflow Human Face (로컬). scripts/link_human_face_dataset.py 로 data.yaml 연동
+HUMAN_FACE_DATASET = Path(r"C:\Users\moonjintae\datasets\Human Face dataset")
+
 # --- YOLO 얼굴 검출 (직접 학습) ---
 # 추론 시 사용: train/train_yolo_face.py 학습 후 생성되는 가중치
 YOLO_MODEL = WEIGHTS_DIR / "face_yolo.pt"
