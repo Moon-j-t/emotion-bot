@@ -1,1 +1,3 @@
 
+{"run_id": "20260527T181213Z", "params": {"run_name": "mtl_nb_001", "epochs": 15, "batch_size": 32, "lr": 0.001, "age_weight": 0.01, "variant": "large"}, "metrics": {"final_train_loss": 0.8563738366330187, "best_val_loss": 2.766166316081799}, "notes": ""}
+{"run_id": "20260527T185720Z", "params": {"run_name": "mtl_nb_002", "epochs": 10, "batch_size": 64, "lr": 0.0003, "age_weight": 0.001, "variant": "large"}, "metrics": {"final_train_loss": 0.15358258749114304, "best_val_loss": 1.1499122812094946}, "notes": ""}
