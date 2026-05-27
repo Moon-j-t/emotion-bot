@@ -116,20 +116,19 @@ def print_train_config(
     return full
 
 
-def params_for_log(params: dict[str, Any], meta: dict[str, str]) -> dict[str, Any]:
-    """experiments/mtl_runs.jsonl 의 params 필드 (학습+경로)."""
-    return {**params, **meta}
+def params_for_log(params: dict[str, Any]) -> dict[str, Any]:
+    """experiments/mtl_runs.jsonl 의 params (학습 하이퍼파라미터만, 경로 제외)."""
+    return {k: params[k] for k in TRAIN_PARAM_KEYS if k in params}
 
 
 def make_log_record(
     params: dict[str, Any],
-    meta: dict[str, str],
     metrics: dict[str, Any],
     notes: str = "",
 ) -> dict[str, Any]:
     return {
         "run_id": datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ"),
-        "params": params_for_log(params, meta),
+        "params": params_for_log(params),
         "metrics": metrics,
         "notes": notes,
     }
