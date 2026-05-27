@@ -4,6 +4,7 @@ batch_size: 32
 lr: 0.001
 age_weight: 0.01
 variant: large
+# prepare_mtl_from_roboflow_emotion.py 실행 후 생성
 train_csv: data/mtl/train.csv
 val_csv: data/mtl/val.csv
 data_root: data/mtl

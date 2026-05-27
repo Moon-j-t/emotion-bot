@@ -29,6 +29,13 @@ YOLO_TRAIN_PROJECT = PROJECT_ROOT / "runs" / "detect"
 YOLO_TRAIN_NAME = "face_train"
 
 # --- MobileNetV3 MTL ---
+MTL_DATA_DIR = PROJECT_ROOT / "data" / "mtl"
+MTL_TRAIN_CSV = MTL_DATA_DIR / "train.csv"
+MTL_VAL_CSV = MTL_DATA_DIR / "val.csv"
+# Roboflow emotion YOLO export (prepare_mtl_from_roboflow_emotion.py 입력)
+ROBOFLOW_EMOTION_YOLO = Path(
+    r"C:\Users\moonjintae\Downloads\emotion detection.v1i.yolov8"
+)
 MTL_WEIGHTS = WEIGHTS_DIR / "face_mtl_mobilenetv3.pt"
 MOBILENET_VARIANT = "large"  # "large" | "small"
 INPUT_SIZE = 224
