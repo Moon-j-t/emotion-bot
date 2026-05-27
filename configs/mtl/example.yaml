@@ -1,12 +1,12 @@
 run_name: mtl_nb_003
 epochs: 10
-batch_size: 64
-lr: 0.0003
+batch_size: 128
+lr: 0.0001
 age_weight: 0.001
-variant: large
+variant: small
 weight_decay: 0.0001
 dropout: 0.3
-patience: 4
+patience: 3
 # prepare_mtl_from_roboflow_emotion.py 실행 후 생성
 train_csv: data/mtl/train.csv
 val_csv: data/mtl/val.csv

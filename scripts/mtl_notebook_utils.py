@@ -71,16 +71,49 @@ def build_run_meta(
     }
 
 
-def print_train_config(params: dict[str, Any], meta: dict[str, str]) -> None:
+def build_full_settings(
+    params: dict[str, Any],
+    meta: dict[str, str],
+    *,
+    extras: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """노트북/로그용 전체 설정 (순서 고정)."""
+    ordered: dict[str, Any] = {}
+    for key in TRAIN_PARAM_KEYS:
+        ordered[key] = params.get(key)
+    for key in RUN_META_KEYS:
+        ordered[key] = meta.get(key)
+    if extras:
+        for key, value in extras.items():
+            ordered[key] = value
+    return ordered
+
+
+def print_train_config(
+    params: dict[str, Any],
+    meta: dict[str, str],
+    *,
+    extras: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    import pprint
+
+    full = build_full_settings(params, meta, extras=extras)
     print("=== TRAIN_PARAMS ===")
     for key in TRAIN_PARAM_KEYS:
-        print(f"  {key}: {params.get(key, '<missing>')}")
+        print(f"  {key}: {full.get(key, '<missing>')}")
     print("=== DATA PATHS ===")
     for key in RUN_META_KEYS:
-        print(f"  {key}: {meta.get(key, '<missing>')}")
+        print(f"  {key}: {full.get(key, '<missing>')}")
+    if extras:
+        print("=== MODEL / DATA (config) ===")
+        for key, value in extras.items():
+            print(f"  {key}: {value}")
     missing = [k for k in TRAIN_PARAM_KEYS if k not in params]
     if missing:
-        print("  WARNING missing keys:", missing)
+        print("  WARNING missing TRAIN_PARAM_KEYS:", missing)
+    print("\n=== ALL SETTINGS (full) ===")
+    pprint.pp(full, width=120, sort_dicts=False)
+    return full
 
 
 def params_for_log(params: dict[str, Any], meta: dict[str, str]) -> dict[str, Any]:
