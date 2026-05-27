@@ -1,4 +1,4 @@
-run_name: mtl_nb_002
+run_name: mtl_nb_003
 epochs: 10
 batch_size: 64
 lr: 0.0003
